@@ -10,7 +10,7 @@ public class Tile {
     private String filepath;
 
     enum TileType {
-        BLANK, PLAYER, WARRIOR;
+        BLANK, PLAYER, WARRIOR
     }
 
     public Tile(TileType tiletype) {
@@ -29,7 +29,8 @@ public class Tile {
     }
 
     public void setFilepath() {
-        this.filepath = System.getProperty("user.dir") + "/img/" + this.tiletype.toString().toLowerCase() + ".png";
+        // https://opengameart.org/content/dungeon-tileset
+        this.filepath = Constants.IMAGE_RESOURCES + this.tiletype.toString().toLowerCase() + ".png";
     }
 
     public TileType getTiletype() {

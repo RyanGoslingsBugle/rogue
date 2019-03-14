@@ -10,4 +10,5 @@ public abstract class Constants {
     public static final int WINDOW_HEIGHT = TILE_HEIGHT * BOARD_HEIGHT + STATUS_HEIGHT;
     public static final int SPEED = 1600;
     public static final int TEXT_SIZE = 24;
+    public static final String IMAGE_RESOURCES = System.getProperty("user.dir") + "/img/";
 }
