@@ -27,6 +27,16 @@ public class GameState implements Serializable {
         return state;
     }
 
+    public void clearState() {
+        gameObjects = new ArrayList<>();
+        rows = new ArrayList<>();
+        status = new HashMap<>();
+        newGameStatus();
+        player.clearPlayer();
+        gameObjects.add(player);
+        updateMap();
+    }
+
     // member objects
     private ArrayList<GameObject> gameObjects;
     private Player player = Player.getPlayerInstance();
@@ -38,7 +48,15 @@ public class GameState implements Serializable {
     private int score;
     private int lives;
     private boolean inGame;
-    private int lastKeyPressed;
+    private boolean gameStarted;
+
+    public boolean isGameStarted() {
+        return gameStarted;
+    }
+
+    public void setGameStarted(boolean gameStarted) {
+        this.gameStarted = gameStarted;
+    }
 
     public boolean isInGame() {
         return inGame;
@@ -48,13 +66,8 @@ public class GameState implements Serializable {
         this.inGame = inGame;
     }
 
-    public int getLastKeyPressed() {
-        return lastKeyPressed;
-    }
-
-    public void setLastKeyPressed(int lastKeyPressed) {
-        this.lastKeyPressed = lastKeyPressed;
-        player.setLastKeyPressed(lastKeyPressed);
+    public void handleKeyPress(int lastKeyPressed) {
+        player.handleKeyPress(lastKeyPressed);
     }
 
     public BufferedImage getBoard() {

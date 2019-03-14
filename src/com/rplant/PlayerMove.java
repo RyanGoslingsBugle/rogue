@@ -21,6 +21,7 @@ public class PlayerMove implements MoveBehaviour {
                 y_position_change++;
                 break;
             case KeyEvent.VK_NUMPAD2:
+            case KeyEvent.VK_DOWN:
                 y_position_change++;
                 break;
             case KeyEvent.VK_NUMPAD3:
@@ -28,9 +29,11 @@ public class PlayerMove implements MoveBehaviour {
                 y_position_change++;
                 break;
             case KeyEvent.VK_NUMPAD4:
+            case KeyEvent.VK_LEFT:
                 x_position_change--;
                 break;
             case KeyEvent.VK_NUMPAD6:
+            case KeyEvent.VK_RIGHT:
                 x_position_change++;
                 break;
             case KeyEvent.VK_NUMPAD7:
@@ -38,6 +41,7 @@ public class PlayerMove implements MoveBehaviour {
                 y_position_change--;
                 break;
             case KeyEvent.VK_NUMPAD8:
+            case KeyEvent.VK_UP:
                 y_position_change--;
                 break;
             case KeyEvent.VK_NUMPAD9:

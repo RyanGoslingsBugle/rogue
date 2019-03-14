@@ -2,7 +2,6 @@ package com.rplant;
 
 public class Player extends GameObject {
     private static Player player;
-    private int lastKeyPressed;
 
     private Player() {
         this.moveBehaviour = new PlayerMove();
@@ -17,8 +16,12 @@ public class Player extends GameObject {
        return player;
     }
 
-    public void setLastKeyPressed(int lastKeyPressed) {
-        this.lastKeyPressed = lastKeyPressed;
+    public void clearPlayer() {
+        this.x_position = 0;
+        this.y_position = 0;
+    }
+
+    public void handleKeyPress(int lastKeyPressed) {
         PlayerMove move = (PlayerMove) this.moveBehaviour;
         move.setKeyCode(lastKeyPressed);
     }
