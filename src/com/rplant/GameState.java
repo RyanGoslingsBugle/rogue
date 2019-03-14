@@ -38,6 +38,24 @@ public class GameState implements Serializable {
     private int score;
     private int lives;
     private boolean inGame;
+    private int lastKeyPressed;
+
+    public boolean isInGame() {
+        return inGame;
+    }
+
+    public void setInGame(boolean inGame) {
+        this.inGame = inGame;
+    }
+
+    public int getLastKeyPressed() {
+        return lastKeyPressed;
+    }
+
+    public void setLastKeyPressed(int lastKeyPressed) {
+        this.lastKeyPressed = lastKeyPressed;
+        player.setLastKeyPressed(lastKeyPressed);
+    }
 
     public BufferedImage getBoard() {
         return board;

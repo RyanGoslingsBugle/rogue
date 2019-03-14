@@ -2,10 +2,10 @@ package com.rplant;
 
 public class Player extends GameObject {
     private static Player player;
-    private boolean moved;
+    private int lastKeyPressed;
 
     private Player() {
-        this.moveBehaviour = new RandomMove();
+        this.moveBehaviour = new PlayerMove();
         this.tile = new Tile(Tile.TileType.PLAYER);
     }
 
@@ -17,11 +17,9 @@ public class Player extends GameObject {
        return player;
     }
 
-    public boolean hasMoved() {
-        return moved;
-    }
-
-    public void setMoved(boolean hasMoved) {
-        this.moved = hasMoved;
+    public void setLastKeyPressed(int lastKeyPressed) {
+        this.lastKeyPressed = lastKeyPressed;
+        PlayerMove move = (PlayerMove) this.moveBehaviour;
+        move.setKeyCode(lastKeyPressed);
     }
 }

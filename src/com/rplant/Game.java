@@ -2,10 +2,10 @@ package com.rplant;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class Game extends JFrame implements ActionListener {
+public class Game extends JFrame implements KeyListener {
 
     private GUI gui = new GUI();
     private GameState gs = GameState.getState();
@@ -23,12 +23,29 @@ public class Game extends JFrame implements ActionListener {
         setTitle("Dungeon Rogue");
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        gui.addKeyListener(this);
     }
 
     private void setUpGame() {
-        // https://docs.oracle.com/javase/tutorial/uiswing/misc/timer.html
-        Timer timer = new Timer(Constants.SPEED, this);
-        timer.start();
+        gs.setInGame(true);
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+        gs.setLastKeyPressed(e.getKeyCode());
+        if (gs.isInGame()) {
+            gs.update();
+            gui.updateGUI(gs.getBoard(), gs.getStatus());
+            gui.repaint();
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
     }
 
     public static void main(String[] args) {
@@ -36,12 +53,5 @@ public class Game extends JFrame implements ActionListener {
             JFrame ex = new Game();
             ex.setVisible(true);
         });
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        gs.update();
-        gui.updateGUI(gs.getBoard(), gs.getStatus());
-        gui.repaint();
     }
 }
