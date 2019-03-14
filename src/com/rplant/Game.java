@@ -51,7 +51,7 @@ public class Game extends JFrame implements KeyListener {
             case KeyEvent.VK_DOWN:
             case KeyEvent.VK_NUMPAD2:
             case KeyEvent.VK_RIGHT:
-                if (currentSelection < Constants.MENU_OPTIONS.length - 1) {
+                if (currentSelection <= Constants.MENU_OPTIONS.length) {
                     currentSelection++;
                 }
                 break;

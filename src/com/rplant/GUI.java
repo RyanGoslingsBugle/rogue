@@ -4,7 +4,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
@@ -20,9 +19,9 @@ public class GUI extends JPanel {
     public GUI() {
         try {
             // https://opengameart.org/content/gold-treasure-icons
-            this.treasureImage = ImageIO.read(new File(Constants.IMAGE_RESOURCES + "treasure.png"));
+            this.treasureImage = ImageIO.read(this.getClass().getClassLoader().getResource("treasure.png"));
             // https://opengameart.org/content/castle-in-the-dark
-            this.menuImage = ImageIO.read(new File(Constants.IMAGE_RESOURCES + "castle.gif"));
+            this.menuImage = ImageIO.read(this.getClass().getClassLoader().getResource("castle.gif"));
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -2,12 +2,10 @@ package com.rplant;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 
 public class Tile {
     private TileType tiletype;
-    private String filepath;
 
     enum TileType {
         BLANK, PLAYER, WARRIOR
@@ -15,22 +13,16 @@ public class Tile {
 
     public Tile(TileType tiletype) {
         this.tiletype = tiletype;
-        setFilepath();
     }
 
     public BufferedImage loadImage() {
         BufferedImage img = null;
         try {
-            img = ImageIO.read(new File(filepath));
+            img = ImageIO.read(this.getClass().getClassLoader().getResource(tiletype.toString().toLowerCase() + ".png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
         return img;
-    }
-
-    public void setFilepath() {
-        // https://opengameart.org/content/dungeon-tileset
-        this.filepath = Constants.IMAGE_RESOURCES + this.tiletype.toString().toLowerCase() + ".png";
     }
 
     public TileType getTiletype() {
@@ -39,6 +31,5 @@ public class Tile {
 
     public void setTiletype(TileType tiletype) {
         this.tiletype = tiletype;
-        setFilepath();
     }
 }
