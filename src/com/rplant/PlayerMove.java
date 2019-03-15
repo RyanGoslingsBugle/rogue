@@ -1,8 +1,9 @@
 package com.rplant;
 
 import java.awt.event.KeyEvent;
+import java.io.Serializable;
 
-public class PlayerMove implements MoveBehaviour {
+public class PlayerMove implements MoveBehaviour, Serializable {
 
     private int keyCode;
 

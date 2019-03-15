@@ -1,6 +1,8 @@
 package com.rplant;
 
-public abstract class GameObject {
+import java.io.Serializable;
+
+public abstract class GameObject implements Serializable {
     protected int x_position;
     protected int y_position;
     protected Tile tile;

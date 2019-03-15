@@ -2,15 +2,20 @@ package com.rplant;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.*;
 import java.util.stream.IntStream;
 
-public class Game extends JFrame implements KeyListener {
+public class Game extends JFrame implements KeyListener, ActionListener {
 
     private GUI gui = new GUI();
     private GameState gs = GameState.getState();
+    private ScreenState state = new ScreenState();
     private int currentSelection = 0;
+    private String menuMessage;
 
     public Game() {
         setUpGame();
@@ -23,20 +28,22 @@ public class Game extends JFrame implements KeyListener {
         pack();
         setTitle("Dungeon Rogue");
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         gui.addKeyListener(this);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        Timer timer = new Timer(Constants.RENDER_DELAY, this);
+        timer.start();
     }
 
     private void setUpGame() {
         gs.clearState();
-        gs.setInGame(false);
+        gs.setScreenStatus(GAME_STATE.MENU);
         gs.setGameStarted(false);
+        updateGUI();
     }
 
     private void updateGUI() {
-        gui.updateGUI(gs.getBoard(), gs.getStatus());
-        gui.setCurrentMenuSelection(this.currentSelection);
-        gui.repaint();
+        state.update(gs.getRows(), gs.getScore(), gs.getLives(), this.currentSelection, gs.getScreenStatus(), this.menuMessage);
+        gui.updateGUI(state);
     }
 
     private void handleKeyPress(int keyCode) {
@@ -51,7 +58,7 @@ public class Game extends JFrame implements KeyListener {
             case KeyEvent.VK_DOWN:
             case KeyEvent.VK_NUMPAD2:
             case KeyEvent.VK_RIGHT:
-                if (currentSelection <= Constants.MENU_OPTIONS.length) {
+                if (currentSelection < Constants.MENU_OPTIONS.length - 1) {
                     currentSelection++;
                 }
                 break;
@@ -80,19 +87,49 @@ public class Game extends JFrame implements KeyListener {
     private void startNewGame() {
         System.out.println("Starting new game");
         gs.clearState();
-        gs.setInGame(true);
+        gs.setScreenStatus(GAME_STATE.GAME);
         gs.setGameStarted(true);
-        gui.setInGame(true);
-        gui.updateGUI(gs.getBoard(), gs.getStatus());
-        gui.repaint();
     }
 
     private void loadGame() {
         //TODO
+        System.out.println("Loading game...");
+        ObjectInputStream in;
+        String message;
+        try {
+            in = new ObjectInputStream(new FileInputStream("rogue.sav"));
+            gs = (GameState) in.readObject();
+            message = "Loaded save";
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            message = "No save file";
+        } catch (IOException e) {
+            message = "Couldn't read save";
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            message = "Failed to load";
+            e.printStackTrace();
+        }
+
+        this.menuMessage = message;
     }
 
     private void saveGame() {
         //TODO
+        System.out.println("Saving game....");
+        ObjectOutputStream out;
+        String message;
+        try {
+            out = new ObjectOutputStream(new FileOutputStream("rogue.sav"));
+            out.writeObject(gs);
+            out.close();
+            message = "Saved";
+        } catch (IOException e) {
+            e.printStackTrace();
+            message = "Save failed";
+        }
+
+        this.menuMessage = message;
     }
 
     private void showHelp() {
@@ -101,29 +138,34 @@ public class Game extends JFrame implements KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        int keyCode = e.getKeyCode();
-        // flip the menu/game UI if the game has started
-        if (keyCode == KeyEvent.VK_ESCAPE && gs.isGameStarted()) {
-            gui.setInGame(!gs.isInGame());
-            gs.setInGame(!gs.isInGame());
-        }
-        // handle an Enter press in the menu
-        else if (keyCode == KeyEvent.VK_ENTER && !gs.isInGame()) {
-            selectMenuItem();
-        }
-        // If it's any other legal game key
-        // https://stackoverflow.com/questions/1128723/how-do-i-determine-whether-an-array-contains-a-particular-value-in-java
-         else if (IntStream.of(Constants.LEGAL_KEYS).anyMatch(x -> x == keyCode)) {
-             if (gs.isInGame()) {
-                 gs.handleKeyPress(keyCode);
-                 gs.update();
+        if (gui.isFocusOwner()) {
+            this.menuMessage = "";
+            int keyCode = e.getKeyCode();
+            // flip the menu/game UI if the game has started
+            if (keyCode == KeyEvent.VK_ESCAPE && gs.isGameStarted()) {
+                if (gs.getScreenStatus() != GAME_STATE.MENU) {
+                    gs.setScreenStatus(GAME_STATE.MENU);
+                } else {
+                    gs.setScreenStatus(GAME_STATE.GAME);
+                }
+            }
+            // handle an Enter press in the menus
+            else if (keyCode == KeyEvent.VK_ENTER && gs.getScreenStatus() == GAME_STATE.MENU) {
+                selectMenuItem();
+            }
+            // If it's any other legal game key
+            // https://stackoverflow.com/questions/1128723/how-do-i-determine-whether-an-array-contains-a-particular-value-in-java
+            else if (IntStream.of(Constants.LEGAL_KEYS).anyMatch(x -> x == keyCode)) {
+                if (gs.getScreenStatus() == GAME_STATE.GAME) {
+                    gs.handleKeyPress(keyCode);
+                    gs.update();
+                } else {
+                    this.handleKeyPress(keyCode);
+                }
+            }
 
-             } else {
-                 this.handleKeyPress(keyCode);
-             }
+            updateGUI();
         }
-
-         updateGUI();
     }
 
     @Override
@@ -132,10 +174,15 @@ public class Game extends JFrame implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {}
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        gui.repaint();
+    }
+
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
-            JFrame ex = new Game();
-            ex.setVisible(true);
+            JFrame game = new Game();
+            game.setVisible(true);
         });
     }
 }

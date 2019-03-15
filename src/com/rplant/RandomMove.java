@@ -1,8 +1,9 @@
 package com.rplant;
 
+import java.io.Serializable;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class RandomMove implements MoveBehaviour {
+public class RandomMove implements MoveBehaviour, Serializable {
     @Override
     public int[] getMove() {
         int x_position_change = ThreadLocalRandom.current().nextInt(-1,2);

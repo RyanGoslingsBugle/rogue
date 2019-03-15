@@ -16,4 +16,5 @@ public abstract class Constants {
             KeyEvent.VK_NUMPAD3, KeyEvent.VK_NUMPAD4, KeyEvent.VK_NUMPAD6, KeyEvent.VK_NUMPAD7, KeyEvent.VK_NUMPAD8,
             KeyEvent.VK_NUMPAD9, KeyEvent.VK_UP, KeyEvent.VK_DOWN, KeyEvent.VK_LEFT, KeyEvent.VK_RIGHT};
     public static final String[] MENU_OPTIONS = new String[] {"New Game", "Load Game", "Save Game", "Help"};
+    public static final int RENDER_DELAY = 30;
 }

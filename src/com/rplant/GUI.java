@@ -1,44 +1,18 @@
 package com.rplant;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.HashMap;
 
 public class GUI extends JPanel {
 
-    private BufferedImage treasureImage;
-    private BufferedImage menuImage;
-    private BufferedImage boardImage;
-    private HashMap<String, Integer> status;
-    private Boolean inGame;
-    private int currentMenuSelection;
+    private ScreenState screenState;
 
     public GUI() {
-        try {
-            // https://opengameart.org/content/gold-treasure-icons
-            this.treasureImage = ImageIO.read(this.getClass().getClassLoader().getResource("treasure.png"));
-            // https://opengameart.org/content/castle-in-the-dark
-            this.menuImage = ImageIO.read(this.getClass().getClassLoader().getResource("castle.gif"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         setUpBoard();
     }
 
-    public void updateGUI(BufferedImage boardImage, HashMap<String, Integer> status) {
-        this.boardImage = boardImage;
-        this.status = status;
-    }
-
-    public void setInGame(Boolean inGame) {
-        this.inGame = inGame;
-    }
-
-    public void setCurrentMenuSelection(int currentMenuSelection) {
-        this.currentMenuSelection = currentMenuSelection;
+    public void updateGUI(ScreenState state) {
+        this.screenState = state;
     }
 
     // http://zetcode.com/tutorials/javagamestutorial/basics/
@@ -46,11 +20,10 @@ public class GUI extends JPanel {
         setBackground(Color.BLACK);
         setFocusable(true);
         setPreferredSize(new Dimension(Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT));
-        inGame = false;
     }
 
     private void drawBoard(Graphics g) {
-        g.drawImage(boardImage, 0, 0, null);
+        g.drawImage(screenState.getBoard(), 0, 0, null);
     }
 
     private void drawStatus(Graphics g) {
@@ -66,11 +39,11 @@ public class GUI extends JPanel {
 
     private void drawTreasure(Graphics g, int x, int y, int width, int height) {
 
-        g.drawImage(treasureImage, x, y, width, height, null);
+        g.drawImage(screenState.getTreasureImage(), x, y, width, height, null);
 
         g.setColor(Color.WHITE);
         g.setFont(new Font("Courier New", Font.BOLD, Constants.TEXT_SIZE));
-        g.drawString(": " + status.get("score"), x + width * 2, y + height / 2 + height / 5);
+        g.drawString(": " + screenState.getGameStatus().get("score"), x + width * 2, y + height / 2 + height / 5);
     }
 
     // https://stackoverflow.com/questions/33402242/how-to-draw-heart-using-java-awt-libaray
@@ -86,11 +59,12 @@ public class GUI extends JPanel {
 
         g.setColor(Color.WHITE);
         g.setFont(new Font("Courier New", Font.BOLD, Constants.TEXT_SIZE));
-        g.drawString(": " + status.get("lives"), x + width * 2, y + height / 2 + height / 4);
+        g.drawString(": " + screenState.getGameStatus().get("lives"), x + width * 2, y + height / 2 + height / 4);
     }
 
     private void drawMenu(Graphics g) {
-        g.drawImage(menuImage,0, 0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT - Constants.STATUS_HEIGHT, null);
+        g.drawImage(screenState.getMenuImage(),0, 0, Constants.WINDOW_WIDTH, Constants.WINDOW_HEIGHT - Constants.STATUS_HEIGHT,
+                null);
         g.setColor(Color.WHITE);
         g.setFont(new Font("Courier New", Font.BOLD, Constants.HEADER_TEXT_SIZE));
         String title = "Dungeon Rogue";
@@ -101,7 +75,7 @@ public class GUI extends JPanel {
 
         int i = 0;
         for (String option: Constants.MENU_OPTIONS) {
-            if (currentMenuSelection == i) {
+            if (screenState.getCurrentMenuSelection() == i) {
                 g.setFont(new Font("Courier New", Font.BOLD, Constants.TEXT_SIZE));
             } else {
                 g.setFont(new Font("Courier New", Font.PLAIN, Constants.TEXT_SIZE));
@@ -112,16 +86,26 @@ public class GUI extends JPanel {
                     Constants.WINDOW_HEIGHT - Constants.STATUS_HEIGHT / 2);
             i++;
         }
+
+        if (screenState.getMenuMessage() != null && !screenState.getMenuMessage().isEmpty()) {
+            String msg = screenState.getMenuMessage();
+            g.drawString(msg, (Constants.WINDOW_WIDTH - metrics.stringWidth(msg)) / 2, Constants.WINDOW_HEIGHT / 2);
+        }
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (inGame) {
-            drawBoard(g);
-            drawStatus(g);
-        } else {
-            drawMenu(g);
+        switch (screenState.getScreenStatus()) {
+            case GAME:
+                drawBoard(g);
+                drawStatus(g);
+                break;
+            case MENU:
+                drawMenu(g);
+                break;
+            case HELP:
+                break;
         }
     }
 }
