@@ -69,8 +69,8 @@ public class GUI extends JPanel {
         g.setFont(new Font("Courier New", Font.BOLD, Constants.HEADER_TEXT_SIZE));
         String title = "Dungeon Rogue";
         // https://stackoverflow.com/questions/27706197/how-can-i-center-graphics-drawstring-in-java
-        FontMetrics metrics = g.getFontMetrics(g.getFont());
-        g.drawString(title, (Constants.WINDOW_WIDTH - metrics.stringWidth(title)) / 2,
+        FontMetrics lMetrics = g.getFontMetrics(g.getFont());
+        g.drawString(title, (Constants.WINDOW_WIDTH - lMetrics.stringWidth(title)) / 2,
                 Constants.WINDOW_HEIGHT - Constants.STATUS_HEIGHT * 2);
 
         int i = 0;
@@ -80,8 +80,9 @@ public class GUI extends JPanel {
             } else {
                 g.setFont(new Font("Courier New", Font.PLAIN, Constants.TEXT_SIZE));
             }
+            FontMetrics sMetrics = g.getFontMetrics(g.getFont());
             int box =
-                    Constants.WINDOW_WIDTH / (Constants.MENU_OPTIONS.length + 1) * (i + 1) - metrics.stringWidth(option) / 4;
+                    Constants.WINDOW_WIDTH / (Constants.MENU_OPTIONS.length + 1) * (i + 1) - sMetrics.stringWidth(option) / 4;
             g.drawString(option, box,
                     Constants.WINDOW_HEIGHT - Constants.STATUS_HEIGHT / 2);
             i++;
@@ -89,23 +90,29 @@ public class GUI extends JPanel {
 
         if (screenState.getMenuMessage() != null && !screenState.getMenuMessage().isEmpty()) {
             String msg = screenState.getMenuMessage();
-            g.drawString(msg, (Constants.WINDOW_WIDTH - metrics.stringWidth(msg)) / 2, Constants.WINDOW_HEIGHT / 2);
+            g.setFont(new Font("Courier New", Font.PLAIN, Constants.TEXT_SIZE));
+            FontMetrics tMetrics = g.getFontMetrics(g.getFont());
+            g.drawString(msg, (Constants.WINDOW_WIDTH - tMetrics.stringWidth(msg)) / 2, Constants.WINDOW_HEIGHT / 2);
         }
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
-        switch (screenState.getScreenStatus()) {
-            case GAME:
-                drawBoard(g);
-                drawStatus(g);
-                break;
-            case MENU:
-                drawMenu(g);
-                break;
-            case HELP:
-                break;
+        if (screenState != null) {
+            switch (screenState.getScreenStatus()) {
+                case GAME:
+                    drawBoard(g);
+                    drawStatus(g);
+                    break;
+                case MENU:
+                    drawMenu(g);
+                    break;
+                case HELP:
+                    break;
+                case GAME_OVER:
+                    break;
+            }
         }
     }
 }

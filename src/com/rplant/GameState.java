@@ -9,11 +9,7 @@ public class GameState implements Serializable {
     private static GameState state;
 
     private GameState() {
-        gameObjects = new ArrayList<>();
-        rows = new ArrayList<>();
-        newGameStatus();
-        gameObjects.add(player);
-        updateMap();
+        clearState();
     }
 
     public static GameState getState() {
@@ -25,16 +21,15 @@ public class GameState implements Serializable {
     }
 
     public void clearState() {
-        gameObjects = new ArrayList<>();
+        enemies = new ArrayList<>();
         rows = new ArrayList<>();
         newGameStatus();
         player.clearPlayer();
-        gameObjects.add(player);
         updateMap();
     }
 
     // member objects
-    private ArrayList<GameObject> gameObjects;
+    private ArrayList<GameObject> enemies;
     private Player player = Player.getPlayerInstance();
     private ArrayList<Row> rows;
 
@@ -86,6 +81,13 @@ public class GameState implements Serializable {
 
     private void updateObjects() {
         player.move();
+        if (enemies.size() < 2) {
+            spawnNewEnemy();
+        }
+        for (GameObject object:enemies) {
+            object.move();
+        }
+
     }
 
     private void handleCollisions() {
@@ -103,8 +105,10 @@ public class GameState implements Serializable {
     private void updateMap() {
         // set all tiles blank
         setBlankTiles();
+        // set player position
+        rows.get(player.y_position).getTiles().set(player.x_position, player.tile);
         // update with game object positions
-        for (GameObject object:gameObjects) {
+        for (GameObject object:enemies) {
             rows.get(object.y_position).getTiles().set(object.x_position, object.tile);
         }
     }
@@ -114,6 +118,12 @@ public class GameState implements Serializable {
         for (int row_num = 0; row_num < Constants.BOARD_HEIGHT; row_num++) {
             rows.add(new Row());
         }
+    }
+
+    // enemy methods
+    private void spawnNewEnemy() {
+        Enemy newEnemy = new Warrior();
+        enemies.add(newEnemy);
     }
 
 }

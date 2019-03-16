@@ -8,7 +8,7 @@ public class Row implements Serializable {
 
     public Row() {
         for (int col = 0; col < Constants.BOARD_WIDTH; col++) {
-            tiles.add(new Tile(Tile.TileType.BLANK));
+            tiles.add(new Tile(OBJECT_TYPE.BLANK));
         }
     }
 

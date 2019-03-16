@@ -38,7 +38,6 @@ public class Game extends JFrame implements KeyListener, ActionListener {
         gs.clearState();
         gs.setScreenStatus(GAME_STATE.MENU);
         gs.setGameStarted(false);
-        updateGUI();
     }
 
     private void updateGUI() {
@@ -85,7 +84,7 @@ public class Game extends JFrame implements KeyListener, ActionListener {
     }
 
     private void startNewGame() {
-        System.out.println("Starting new game");
+        System.out.println("Starting new game...");
         gs.clearState();
         gs.setScreenStatus(GAME_STATE.GAME);
         gs.setGameStarted(true);
@@ -95,11 +94,11 @@ public class Game extends JFrame implements KeyListener, ActionListener {
         //TODO
         System.out.println("Loading game...");
         ObjectInputStream in;
-        String message;
+        String message = "";
         try {
             in = new ObjectInputStream(new FileInputStream("rogue.sav"));
             gs = (GameState) in.readObject();
-            message = "Loaded save";
+            gs.setScreenStatus(GAME_STATE.GAME);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             message = "No save file";
@@ -141,30 +140,31 @@ public class Game extends JFrame implements KeyListener, ActionListener {
         if (gui.isFocusOwner()) {
             this.menuMessage = "";
             int keyCode = e.getKeyCode();
+            GAME_STATE state = gs.getScreenStatus();
             // flip the menu/game UI if the game has started
             if (keyCode == KeyEvent.VK_ESCAPE && gs.isGameStarted()) {
-                if (gs.getScreenStatus() != GAME_STATE.MENU) {
+                if (state != GAME_STATE.MENU) {
                     gs.setScreenStatus(GAME_STATE.MENU);
                 } else {
                     gs.setScreenStatus(GAME_STATE.GAME);
                 }
+            } else if (state == GAME_STATE.HELP || state == GAME_STATE.GAME_OVER) {
+                gs.setScreenStatus(GAME_STATE.MENU);
             }
             // handle an Enter press in the menus
-            else if (keyCode == KeyEvent.VK_ENTER && gs.getScreenStatus() == GAME_STATE.MENU) {
+            else if (keyCode == KeyEvent.VK_ENTER && state == GAME_STATE.MENU) {
                 selectMenuItem();
             }
             // If it's any other legal game key
             // https://stackoverflow.com/questions/1128723/how-do-i-determine-whether-an-array-contains-a-particular-value-in-java
             else if (IntStream.of(Constants.LEGAL_KEYS).anyMatch(x -> x == keyCode)) {
-                if (gs.getScreenStatus() == GAME_STATE.GAME) {
+                if (state == GAME_STATE.GAME) {
                     gs.handleKeyPress(keyCode);
                     gs.update();
-                } else {
+                } else if (state == GAME_STATE.MENU) {
                     this.handleKeyPress(keyCode);
                 }
             }
-
-            updateGUI();
         }
     }
 
@@ -176,6 +176,7 @@ public class Game extends JFrame implements KeyListener, ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        updateGUI();
         gui.repaint();
     }
 

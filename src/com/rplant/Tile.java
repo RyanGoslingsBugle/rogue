@@ -6,13 +6,9 @@ import java.io.IOException;
 import java.io.Serializable;
 
 public class Tile implements Serializable {
-    private TileType tiletype;
+    private OBJECT_TYPE tiletype;
 
-    enum TileType {
-        BLANK, PLAYER, WARRIOR
-    }
-
-    public Tile(TileType tiletype) {
+    public Tile(OBJECT_TYPE tiletype) {
         this.tiletype = tiletype;
     }
 
@@ -24,13 +20,5 @@ public class Tile implements Serializable {
             e.printStackTrace();
         }
         return img;
-    }
-
-    public TileType getTiletype() {
-        return tiletype;
-    }
-
-    public void setTiletype(TileType tiletype) {
-        this.tiletype = tiletype;
     }
 }

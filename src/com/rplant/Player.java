@@ -4,8 +4,9 @@ public class Player extends GameObject {
     private static Player player;
 
     private Player() {
+        this.objectType = OBJECT_TYPE.PLAYER;
         this.moveBehaviour = new PlayerMove();
-        this.tile = new Tile(Tile.TileType.PLAYER);
+        this.tile = new Tile(objectType);
     }
 
     public static Player getPlayerInstance() {
@@ -17,8 +18,8 @@ public class Player extends GameObject {
     }
 
     public void clearPlayer() {
-        this.x_position = 0;
-        this.y_position = 0;
+        this.x_position = Constants.BOARD_WIDTH / 2 - 1;
+        this.y_position = Constants.BOARD_HEIGHT / 2 - 1;
     }
 
     public void handleKeyPress(int lastKeyPressed) {
