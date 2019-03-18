@@ -1,8 +1,5 @@
 package com.rplant;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.io.Serializable;
 
 public class Tile implements Serializable {
@@ -12,13 +9,7 @@ public class Tile implements Serializable {
         this.tiletype = tiletype;
     }
 
-    public BufferedImage loadImage() {
-        BufferedImage img = null;
-        try {
-            img = ImageIO.read(this.getClass().getClassLoader().getResource(tiletype.toString().toLowerCase() + ".png"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return img;
+    public OBJECT_TYPE getTiletype() {
+        return tiletype;
     }
 }

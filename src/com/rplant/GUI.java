@@ -75,9 +75,17 @@ public class GUI extends JPanel {
 
         int i = 0;
         for (String option: Constants.MENU_OPTIONS) {
-            if (screenState.getCurrentMenuSelection() == i) {
+            // Gray out Save option if game hasn't started
+            if (!screenState.isStarted() && option.equals("Save Game")) {
+                g.setColor(Color.GRAY);
+                g.setFont(new Font("Courier New", Font.PLAIN, Constants.TEXT_SIZE));
+            } // Display current choice bold
+            else if (screenState.getCurrentMenuSelection() == i) {
+                g.setColor(Color.WHITE);
                 g.setFont(new Font("Courier New", Font.BOLD, Constants.TEXT_SIZE));
-            } else {
+            } // Display other choices plain
+            else {
+                g.setColor(Color.WHITE);
                 g.setFont(new Font("Courier New", Font.PLAIN, Constants.TEXT_SIZE));
             }
             FontMetrics sMetrics = g.getFontMetrics(g.getFont());

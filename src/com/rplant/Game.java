@@ -17,7 +17,7 @@ public class Game extends JFrame implements KeyListener, ActionListener {
     private int currentSelection = 0;
     private String menuMessage;
 
-    public Game() {
+    private Game() {
         setUpGame();
         setUI();
     }
@@ -41,7 +41,9 @@ public class Game extends JFrame implements KeyListener, ActionListener {
     }
 
     private void updateGUI() {
-        state.update(gs.getRows(), gs.getScore(), gs.getLives(), this.currentSelection, gs.getScreenStatus(), this.menuMessage);
+        state.update(gs.getRows(), gs.getScore(), gs.getLives(), this.currentSelection, gs.isGameStarted(),
+                gs.getScreenStatus(),
+                this.menuMessage);
         gui.updateGUI(state);
     }
 
