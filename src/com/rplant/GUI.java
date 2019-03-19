@@ -105,6 +105,14 @@ public class GUI extends JPanel {
         }
     }
 
+    private void drawGameOver(Graphics g) {
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Courier New", Font.BOLD, Constants.HEADER_TEXT_SIZE));
+        FontMetrics lMetrics = g.getFontMetrics(g.getFont());
+        String msg = "YOU DIED";
+        g.drawString(msg, (Constants.WINDOW_WIDTH - lMetrics.stringWidth(msg)) / 2, Constants.WINDOW_HEIGHT / 2);
+    }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -120,6 +128,7 @@ public class GUI extends JPanel {
                 case HELP:
                     break;
                 case GAME_OVER:
+                    drawGameOver(g);
                     break;
             }
         }

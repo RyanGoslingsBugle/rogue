@@ -156,6 +156,10 @@ public class Game extends JFrame implements KeyListener, ActionListener {
             } else if (state == GameStatus.HELP || state == GameStatus.GAME_OVER) {
                 gs.setScreenStatus(GameStatus.MENU);
             }
+            // secret player kill key
+            else if (keyCode == KeyEvent.VK_K && gs.isGameStarted()) {
+                gs.gameOver();
+            }
             // handle an Enter press in the menus
             else if (keyCode == KeyEvent.VK_ENTER && state == GameStatus.MENU) {
                 selectMenuItem();
