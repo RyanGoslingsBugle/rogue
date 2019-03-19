@@ -1,5 +1,6 @@
 package com.rplant;
 
 public interface MoveBehaviour {
-    int[] getMove();
+
+    int[] getMove(int[] playerPosition, int[] currentPosition);
 }

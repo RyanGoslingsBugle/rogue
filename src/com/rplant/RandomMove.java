@@ -5,7 +5,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class RandomMove implements MoveBehaviour, Serializable {
     @Override
-    public int[] getMove() {
+    public int[] getMove(int[] playerPosition, int[] currentPosition) {
         int x_position_change = ThreadLocalRandom.current().nextInt(-1,2);
         int y_position_change = ThreadLocalRandom.current().nextInt(-1,2);
 

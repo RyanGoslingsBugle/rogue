@@ -12,7 +12,7 @@ public class PlayerMove implements MoveBehaviour, Serializable {
     }
 
     @Override
-    public int[] getMove() {
+    public int[] getMove(int[] playerPosition, int[] currentPosition) {
         int x_position_change = 0;
         int y_position_change = 0;
         // https://stackoverflow.com/questions/23876885/keylisteners-with-numpad
