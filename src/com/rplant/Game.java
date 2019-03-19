@@ -11,9 +11,10 @@ import java.util.stream.IntStream;
 
 public class Game extends JFrame implements KeyListener, ActionListener {
 
-    private GUI gui = new GUI();
+    private final GUI gui = new GUI();
+    private final SoundManager snd = new SoundManager();
     private GameState gs = GameState.getState();
-    private ScreenState state = new ScreenState();
+    private final ScreenState state = new ScreenState();
     private int currentSelection = 0;
     private String menuMessage;
 
@@ -36,11 +37,12 @@ public class Game extends JFrame implements KeyListener, ActionListener {
 
     private void setUpGame() {
         gs.clearState();
-        gs.setScreenStatus(GAME_STATE.MENU);
+        gs.setScreenStatus(GameStatus.MENU);
         gs.setGameStarted(false);
     }
 
     private void updateGUI() {
+        snd.update(gs.getScreenStatus());
         state.update(gs.getRows(), gs.getScore(), gs.getLives(), this.currentSelection, gs.isGameStarted(),
                 gs.getScreenStatus(),
                 this.menuMessage);
@@ -67,6 +69,7 @@ public class Game extends JFrame implements KeyListener, ActionListener {
     }
 
     private void selectMenuItem() {
+        SoundEffect.SELECT.play();
         switch (currentSelection) {
             case 0:
                 startNewGame();
@@ -88,7 +91,7 @@ public class Game extends JFrame implements KeyListener, ActionListener {
     private void startNewGame() {
         System.out.println("Starting new game...");
         gs.clearState();
-        gs.setScreenStatus(GAME_STATE.GAME);
+        gs.setScreenStatus(GameStatus.GAME);
         gs.setGameStarted(true);
     }
 
@@ -100,7 +103,7 @@ public class Game extends JFrame implements KeyListener, ActionListener {
         try {
             in = new ObjectInputStream(new FileInputStream("rogue.sav"));
             gs = (GameState) in.readObject();
-            gs.setScreenStatus(GAME_STATE.GAME);
+            gs.setScreenStatus(GameStatus.GAME);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             message = "No save file";
@@ -142,28 +145,28 @@ public class Game extends JFrame implements KeyListener, ActionListener {
         if (gui.isFocusOwner()) {
             this.menuMessage = "";
             int keyCode = e.getKeyCode();
-            GAME_STATE state = gs.getScreenStatus();
+            GameStatus state = gs.getScreenStatus();
             // flip the menu/game UI if the game has started
             if (keyCode == KeyEvent.VK_ESCAPE && gs.isGameStarted()) {
-                if (state != GAME_STATE.MENU) {
-                    gs.setScreenStatus(GAME_STATE.MENU);
+                if (state != GameStatus.MENU) {
+                    gs.setScreenStatus(GameStatus.MENU);
                 } else {
-                    gs.setScreenStatus(GAME_STATE.GAME);
+                    gs.setScreenStatus(GameStatus.GAME);
                 }
-            } else if (state == GAME_STATE.HELP || state == GAME_STATE.GAME_OVER) {
-                gs.setScreenStatus(GAME_STATE.MENU);
+            } else if (state == GameStatus.HELP || state == GameStatus.GAME_OVER) {
+                gs.setScreenStatus(GameStatus.MENU);
             }
             // handle an Enter press in the menus
-            else if (keyCode == KeyEvent.VK_ENTER && state == GAME_STATE.MENU) {
+            else if (keyCode == KeyEvent.VK_ENTER && state == GameStatus.MENU) {
                 selectMenuItem();
             }
             // If it's any other legal game key
             // https://stackoverflow.com/questions/1128723/how-do-i-determine-whether-an-array-contains-a-particular-value-in-java
             else if (IntStream.of(Constants.LEGAL_KEYS).anyMatch(x -> x == keyCode)) {
-                if (state == GAME_STATE.GAME) {
+                if (state == GameStatus.GAME) {
                     gs.handleKeyPress(keyCode);
                     gs.update();
-                } else if (state == GAME_STATE.MENU) {
+                } else if (state == GameStatus.MENU) {
                     this.handleKeyPress(keyCode);
                 }
             }

@@ -26,18 +26,19 @@ public class GameState implements Serializable {
         newGameStatus();
         player.clearPlayer();
         updateMap();
+        ObjectType.init();
     }
 
     // member objects
     private ArrayList<GameObject> enemies;
-    private Player player = Player.getPlayerInstance();
+    private final Player player = Player.getPlayerInstance();
     private ArrayList<Row> rows;
 
     // state vars
     private int score;
     private int lives;
     private boolean gameStarted;
-    private GAME_STATE screenStatus;
+    private GameStatus screenStatus;
 
     public boolean isGameStarted() {
         return gameStarted;
@@ -47,11 +48,11 @@ public class GameState implements Serializable {
         this.gameStarted = gameStarted;
     }
 
-    public GAME_STATE getScreenStatus() {
+    public GameStatus getScreenStatus() {
         return screenStatus;
     }
 
-    public void setScreenStatus(GAME_STATE screenStatus) {
+    public void setScreenStatus(GameStatus screenStatus) {
         this.screenStatus = screenStatus;
     }
 

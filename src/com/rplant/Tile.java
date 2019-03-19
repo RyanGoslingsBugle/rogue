@@ -3,13 +3,13 @@ package com.rplant;
 import java.io.Serializable;
 
 public class Tile implements Serializable {
-    private OBJECT_TYPE tiletype;
+    private final ObjectType tiletype;
 
-    public Tile(OBJECT_TYPE tiletype) {
+    public Tile(ObjectType tiletype) {
         this.tiletype = tiletype;
     }
 
-    public OBJECT_TYPE getTiletype() {
+    public ObjectType getTiletype() {
         return tiletype;
     }
 }

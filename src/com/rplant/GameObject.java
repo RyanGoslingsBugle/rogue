@@ -5,17 +5,9 @@ import java.io.Serializable;
 public abstract class GameObject implements Serializable {
     protected int x_position;
     protected int y_position;
-    protected OBJECT_TYPE objectType;
+    protected ObjectType objectType;
     protected MoveBehaviour moveBehaviour;
     protected Tile tile;
-
-    public MoveBehaviour getMoveBehaviour() {
-        return moveBehaviour;
-    }
-
-    public void setMoveBehaviour(MoveBehaviour moveBehaviour) {
-        this.moveBehaviour = moveBehaviour;
-    }
 
     public void move() {
         int[] changes = this.moveBehaviour.getMove();

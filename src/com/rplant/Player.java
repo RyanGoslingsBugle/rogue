@@ -4,7 +4,7 @@ public class Player extends GameObject {
     private static Player player;
 
     private Player() {
-        this.objectType = OBJECT_TYPE.PLAYER;
+        this.objectType = ObjectType.PLAYER;
         this.moveBehaviour = new PlayerMove();
         this.tile = new Tile(objectType);
     }
@@ -23,6 +23,7 @@ public class Player extends GameObject {
     }
 
     public void handleKeyPress(int lastKeyPressed) {
+        SoundEffect.MOVE.play();
         PlayerMove move = (PlayerMove) this.moveBehaviour;
         move.setKeyCode(lastKeyPressed);
     }

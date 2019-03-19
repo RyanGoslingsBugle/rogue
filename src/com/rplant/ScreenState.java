@@ -9,14 +9,13 @@ import java.util.HashMap;
 
 public class ScreenState {
 
-    private GAME_STATE screenStatus;
+    private GameStatus screenStatus;
     private HashMap<String, Integer> gameStatus;
     private BufferedImage board;
     private int currentMenuSelection;
     private BufferedImage treasureImage;
     private BufferedImage menuImage;
     private String menuMessage;
-    private HashMap<OBJECT_TYPE, BufferedImage> tileImages;
     private boolean isStarted;
 
     public ScreenState() {
@@ -31,21 +30,6 @@ public class ScreenState {
             }
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        tileImages = new HashMap<>();
-
-        for (OBJECT_TYPE obj: OBJECT_TYPE.values()) {
-            BufferedImage img = null;
-            try {
-                URL imgUrl = this.getClass().getClassLoader().getResource(obj.toString().toLowerCase() + ".png");
-                if (imgUrl != null) {
-                    img = ImageIO.read(imgUrl);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            tileImages.put(obj, img);
         }
     }
 
@@ -73,7 +57,7 @@ public class ScreenState {
         return menuImage;
     }
 
-    public GAME_STATE getScreenStatus() {
+    public GameStatus getScreenStatus() {
         return screenStatus;
     }
 
@@ -82,7 +66,7 @@ public class ScreenState {
     }
 
     public void update(ArrayList<Row> boardRows, int score, int lives, int currentMenuSelection,
-                       boolean isStarted, GAME_STATE gameState
+                       boolean isStarted, GameStatus gameState
             , String menuMessage) {
         board = joinBoardImage(boardRows);
         gameStatus = new HashMap<>();
@@ -107,7 +91,7 @@ public class ScreenState {
         for (int y_coord = 0; y_coord < rows; y_coord++) {
             for (int x_coord = 0; x_coord < cols; x_coord++) {
                 Tile current = boardRows.get(y_coord).getTiles().get(x_coord);
-                boardParts[counter] = tileImages.get(current.getTiletype());
+                boardParts[counter] = current.getTiletype().getImg();
                 counter++;
             }
         }
