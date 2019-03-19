@@ -7,6 +7,8 @@ import java.net.URL;
 public enum SoundEffect {
     SELECT,
     MOVE,
+    HURT,
+    LOSE,
     DIE;
 
     private Clip clip;
