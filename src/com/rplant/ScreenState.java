@@ -1,7 +1,10 @@
 package com.rplant;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
@@ -97,7 +100,21 @@ public class ScreenState {
         for (int y_coord = 0; y_coord < rows; y_coord++) {
             for (int x_coord = 0; x_coord < cols; x_coord++) {
                 Tile current = boardRows.get(y_coord).getTiles().get(x_coord);
-                boardParts[counter] = current.getTiletype().getImg();
+                BufferedImage temp = current.getTiletype().getImg();
+                // https://stackoverflow.com/questions/31185160/how-to-copy-an-image-bufferedimage
+                ColorModel model = temp.getColorModel();
+                WritableRaster raster = temp.copyData(null);
+                BufferedImage clone = new BufferedImage(model, raster, model.isAlphaPremultiplied(), null);
+                // draw number of objects if greater than 1
+                if (current.getNumObjs() > 0) {
+                    Graphics2D g2d = clone.createGraphics();
+                    g2d.setColor(Color.WHITE);
+                    g2d.setFont(new Font("Courier New", Font.PLAIN, Constants.TILE_WIDTH / 4));
+                    g2d.drawString(String.valueOf(current.getNumObjs() + 1), Constants.TILE_WIDTH - 15,
+                            Constants.TILE_HEIGHT - 10);
+                    g2d.dispose();
+                }
+                boardParts[counter] = clone;
                 counter++;
             }
         }

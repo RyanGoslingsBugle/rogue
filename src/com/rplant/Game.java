@@ -98,7 +98,6 @@ public class Game extends JFrame implements KeyListener, ActionListener {
     }
 
     private void loadGame() {
-        //TODO
         System.out.println("Loading game...");
         ObjectInputStream in;
         String message = "";
@@ -121,7 +120,6 @@ public class Game extends JFrame implements KeyListener, ActionListener {
     }
 
     private void saveGame() {
-        //TODO
         System.out.println("Saving game....");
         ObjectOutputStream out;
         String message;

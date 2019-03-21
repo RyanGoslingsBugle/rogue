@@ -52,10 +52,7 @@ public class GameState implements Serializable {
             lives += Difficulty.EASY.getLives() - Difficulty.NORMAL.getLives();
         } else {
             difficulty = Difficulty.NORMAL;
-            lives -= Difficulty.EASY.getLives() - Difficulty.NORMAL.getLives();
-            if (lives <= 0) {
-                lives = 1;
-            }
+            lives = Math.max(1, lives - (Difficulty.EASY.getLives() - Difficulty.NORMAL.getLives()));
         }
     }
 
@@ -124,9 +121,7 @@ public class GameState implements Serializable {
             GameObject object = enemyIterator.next();
             if (Arrays.equals(player.getPosition(), object.getPosition())) {
                 collisionCount++;
-                System.out.println("collision: " + collisionCount);
                 if (collisionCount < this.difficulty.getNumToKill()) {
-                    System.out.println("Killing enemy");
                     // https://stackoverflow.com/questions/8104692/how-to-avoid-java-util-concurrentmodificationexception-when-iterating-through-an
                     killEnemy((Enemy)object, enemyIterator);
                     score += ((Enemy) object).scoreVal;
@@ -163,6 +158,16 @@ public class GameState implements Serializable {
         rows.get(player.y_position).getTiles().set(player.x_position, player.tile);
         // update with game object positions
         for (GameObject object:enemies) {
+            // count other enemies on the same tile
+            int overlap = 0;
+            for (GameObject otherObject:enemies) {
+                if (!object.equals(otherObject )) {
+                    if (Arrays.equals(object.getPosition(), otherObject.getPosition())) {
+                        overlap++;
+                    }
+                }
+            }
+            object.tile.setNumObjs(overlap);
             rows.get(object.y_position).getTiles().set(object.x_position, object.tile);
         }
     }
