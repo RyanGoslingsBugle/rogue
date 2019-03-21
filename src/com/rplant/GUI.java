@@ -76,6 +76,10 @@ public class GUI extends JPanel {
 
         int i = 0;
         for (String option: Constants.MENU_OPTIONS) {
+            // Display the current difficulty setting
+            if (option.equals("Difficulty")) {
+                option = "Difficulty: " + screenState.getDifficulty().toString();
+            }
             // Gray out Save option if game hasn't started
             if (!screenState.isStarted() && option.equals("Save Game")) {
                 g.setColor(Color.GRAY);
@@ -89,11 +93,10 @@ public class GUI extends JPanel {
                 g.setColor(Color.WHITE);
                 g.setFont(new Font("Courier New", Font.PLAIN, Constants.TEXT_SIZE));
             }
-            FontMetrics sMetrics = g.getFontMetrics(g.getFont());
-            int box =
-                    Constants.WINDOW_WIDTH / (Constants.MENU_OPTIONS.length + 1) * (i + 1) - sMetrics.stringWidth(option) / 4;
-            g.drawString(option, box,
-                    Constants.WINDOW_HEIGHT - Constants.STATUS_HEIGHT / 2);
+            FontMetrics sMetrics = g.getFontMetrics();
+            int x = ((i % 3 + 1) * Constants.WINDOW_WIDTH / 4) - sMetrics.stringWidth(option) / 2;
+            int y = (Constants.WINDOW_HEIGHT - Constants.STATUS_HEIGHT) + (Constants.STATUS_HEIGHT * (i / 3 + 1) / 3);
+            g.drawString(option, x, y);
             i++;
         }
 

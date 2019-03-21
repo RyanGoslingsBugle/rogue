@@ -44,8 +44,7 @@ public class Game extends JFrame implements KeyListener, ActionListener {
     private void updateGUI() {
         snd.update(gs.getScreenStatus());
         state.update(gs.getRows(), gs.getScore(), gs.getLives(), this.currentSelection, gs.isGameStarted(),
-                gs.getScreenStatus(),
-                this.menuMessage);
+                gs.getScreenStatus(), this.menuMessage, gs.getDifficulty());
         gui.updateGUI(state);
     }
 
@@ -84,6 +83,9 @@ public class Game extends JFrame implements KeyListener, ActionListener {
                 break;
             case 3:
                 showHelp();
+                break;
+            case 4:
+                changeDifficulty();
                 break;
         }
     }
@@ -138,6 +140,10 @@ public class Game extends JFrame implements KeyListener, ActionListener {
 
     private void showHelp() {
         //TODO
+    }
+
+    private void changeDifficulty() {
+        gs.changeDifficulty();
     }
 
     @Override

@@ -17,6 +17,7 @@ public class ScreenState {
     private BufferedImage menuImage;
     private String menuMessage;
     private boolean isStarted;
+    private Difficulty difficulty;
 
     public ScreenState() {
         try {
@@ -65,9 +66,13 @@ public class ScreenState {
         return menuMessage;
     }
 
+    public Difficulty getDifficulty() {
+        return difficulty;
+    }
+
     public void update(List<Row> boardRows, int score, int lives, int currentMenuSelection,
                        boolean isStarted, GameStatus gameState
-            , String menuMessage) {
+            , String menuMessage, Difficulty difficulty) {
         board = joinBoardImage(boardRows);
         gameStatus = new HashMap<>();
         gameStatus.put("score", score);
@@ -76,6 +81,7 @@ public class ScreenState {
         this.isStarted = isStarted;
         this.screenStatus = gameState;
         this.menuMessage = menuMessage;
+        this.difficulty = difficulty;
     }
 
     // http://kalanir.blogspot.com/2010/02/how-to-merge-multiple-images-into-one.html

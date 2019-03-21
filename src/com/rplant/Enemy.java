@@ -1,6 +1,6 @@
 package com.rplant;
 
-public abstract class Enemy extends GameObject implements Collidable {
+public abstract class Enemy extends GameObject {
 
     protected int scoreVal;
     protected double probability;

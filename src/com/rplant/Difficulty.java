@@ -4,9 +4,9 @@ public enum Difficulty {
     EASY(7, 3, 3),
     NORMAL(12, 2, 1);
 
-    private int numEnemies;
-    private int numToKill;
-    private int lives;
+    private final int numEnemies;
+    private final int numToKill;
+    private final int lives;
 
     Difficulty(int numEnemies, int numToKill, int lives) {
         this.numEnemies = numEnemies;

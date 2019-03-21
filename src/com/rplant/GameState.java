@@ -9,6 +9,7 @@ public class GameState implements Serializable {
     private static GameState state;
 
     private GameState() {
+        difficulty = Difficulty.NORMAL;
         clearState();
     }
 
@@ -24,14 +25,12 @@ public class GameState implements Serializable {
         enemies = new LinkedList<>();
         rows = new ArrayList<>();
         player.clearPlayer();
-        difficulty = Difficulty.NORMAL;
         newGameStatus();
         ObjectType.init();
         updateMap();
     }
 
     // member objects
-    private List<Enemy> allEnemies = new ArrayList<>();
     private List<GameObject> enemies;
     private final Player player = Player.getPlayerInstance();
     private List<Row> rows;
@@ -47,8 +46,17 @@ public class GameState implements Serializable {
         return difficulty;
     }
 
-    public void setDifficulty(Difficulty difficulty) {
-        this.difficulty = difficulty;
+    public void changeDifficulty() {
+        if (difficulty == Difficulty.NORMAL) {
+            difficulty = Difficulty.EASY;
+            lives += Difficulty.EASY.getLives() - Difficulty.NORMAL.getLives();
+        } else {
+            difficulty = Difficulty.NORMAL;
+            lives -= Difficulty.EASY.getLives() - Difficulty.NORMAL.getLives();
+            if (lives <= 0) {
+                lives = 1;
+            }
+        }
     }
 
     public boolean isGameStarted() {
@@ -169,7 +177,7 @@ public class GameState implements Serializable {
     // enemy methods
     private void spawnNewEnemy() {
         // https://stackoverflow.com/questions/6737283/weighted-randomness-in-java
-        allEnemies.clear();
+        List<Enemy> allEnemies = new ArrayList<>();
         allEnemies.add(new Goblin());
         allEnemies.add(new Warrior());
         allEnemies.add(new Imp());
