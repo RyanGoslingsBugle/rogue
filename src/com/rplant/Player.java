@@ -4,6 +4,7 @@ public class Player extends GameObject {
     private static Player player;
 
     private Player() {
+        // https://opengameart.org/content/pixel-art-dwarf-sprites
         this.objectType = ObjectType.PLAYER;
         this.moveBehaviour = new PlayerMove();
         this.tile = new Tile(objectType);
