@@ -23,7 +23,7 @@ public class GUI extends JPanel {
     }
 
     private void drawBoard(Graphics g) {
-        g.drawImage(screenState.getBoard(), 0, 0, null);
+        g.drawImage(screenState.getBoard(), Constants.BORDER_WIDTH, Constants.BORDER_HEIGHT, null);
     }
 
     private void drawStatus(Graphics g) {
