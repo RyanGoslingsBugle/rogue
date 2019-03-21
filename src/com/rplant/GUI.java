@@ -33,7 +33,7 @@ public class GUI extends JPanel {
 
         drawHeart(g, max_x / 5, min_y + (Constants.STATUS_HEIGHT / 3), max_x / 15,
                 Constants.STATUS_HEIGHT / 3, min_y + Constants.STATUS_HEIGHT / 2);
-        drawTreasure(g, max_x - max_x / 5 * 2, min_y + (Constants.STATUS_HEIGHT / 4), max_x / 10,
+        drawTreasure(g, max_x - max_x / 5 * 2, min_y + (Constants.STATUS_HEIGHT / 5), max_x / 10,
                 Constants.STATUS_HEIGHT / 2, min_y + Constants.STATUS_HEIGHT / 2);
 
     }

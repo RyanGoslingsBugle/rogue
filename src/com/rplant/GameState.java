@@ -1,9 +1,7 @@
 package com.rplant;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.util.*;
 
 public class GameState implements Serializable {
 
@@ -23,7 +21,7 @@ public class GameState implements Serializable {
     }
 
     public void clearState() {
-        enemies = new ArrayList<>();
+        enemies = new LinkedList<>();
         rows = new ArrayList<>();
         player.clearPlayer();
         difficulty = Difficulty.NORMAL;
@@ -33,9 +31,10 @@ public class GameState implements Serializable {
     }
 
     // member objects
-    private ArrayList<GameObject> enemies;
+    private List<Enemy> allEnemies = new ArrayList<>();
+    private List<GameObject> enemies;
     private final Player player = Player.getPlayerInstance();
-    private ArrayList<Row> rows;
+    private List<Row> rows;
 
     // state vars
     private int score;
@@ -76,7 +75,7 @@ public class GameState implements Serializable {
         return lives;
     }
 
-    public ArrayList<Row> getRows() {
+    public List<Row> getRows() {
         return rows;
     }
 
@@ -88,18 +87,27 @@ public class GameState implements Serializable {
     public void update() {
         updateObjects();
         updateMap();
-        //updateStatus();
     }
 
     private void updateObjects() {
+
+        // move player
         player.move(player.getPosition());
-        if (enemies.size() < difficulty.getNumEnemies()) {
-            spawnNewEnemy();
-        }
-        for (GameObject object:enemies) {
+        checkCollisions();
+
+        // move enemies
+        for (GameObject object : enemies) {
             object.move(player.getPosition());
         }
+
         checkCollisions();
+
+        // spawn new enemy if less than desired amount
+        if (enemies.size() < difficulty.getNumEnemies()) {
+            if (Math.random() < (1/3.0d)) {
+                spawnNewEnemy();
+            }
+        }
     }
 
     private void checkCollisions() {
@@ -113,8 +121,9 @@ public class GameState implements Serializable {
                     System.out.println("Killing enemy");
                     // https://stackoverflow.com/questions/8104692/how-to-avoid-java-util-concurrentmodificationexception-when-iterating-through-an
                     killEnemy((Enemy)object, enemyIterator);
+                    score += ((Enemy) object).scoreVal;
                 } else {
-                    if (lives > 0) {
+                    if (lives > 1) {
                         SoundEffect.HURT.play();
                         lives --;
                     } else {
@@ -124,10 +133,6 @@ public class GameState implements Serializable {
             }
         }
     }
-
-//
-//    private void updateStatus() {
-//    }
 
     private void newGameStatus() {
         score = 0;
@@ -144,6 +149,8 @@ public class GameState implements Serializable {
     private void updateMap() {
         // set all tiles blank
         setBlankTiles();
+        // set spawn tile
+        rows.get(0).getTiles().set(0, new Tile(ObjectType.SPAWN));
         // set player position
         rows.get(player.y_position).getTiles().set(player.x_position, player.tile);
         // update with game object positions
@@ -161,7 +168,30 @@ public class GameState implements Serializable {
 
     // enemy methods
     private void spawnNewEnemy() {
-        Enemy newEnemy = new Warrior();
+        // https://stackoverflow.com/questions/6737283/weighted-randomness-in-java
+        allEnemies.clear();
+        allEnemies.add(new Goblin());
+        allEnemies.add(new Warrior());
+        allEnemies.add(new Imp());
+        double totalProb = 0.0d;
+        for (Enemy currentEnemy : allEnemies) {
+            totalProb += currentEnemy.getProbability();
+        }
+        int randomIndex = -1;
+        double randomPick = Math.random() * totalProb;
+        for (int i = 0; i < allEnemies.size(); ++i)
+        {
+            Enemy currentEnemy = allEnemies.get(i);
+            randomPick -= currentEnemy.getProbability();
+            if (randomPick <= 0.0d)
+            {
+                randomIndex = i;
+                break;
+            }
+        }
+
+        Enemy newEnemy = allEnemies.get(randomIndex);
+
         enemies.add(newEnemy);
     }
 

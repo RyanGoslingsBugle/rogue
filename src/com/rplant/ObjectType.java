@@ -7,8 +7,11 @@ import java.net.URL;
 
 public enum ObjectType {
     BLANK,
+    SPAWN,
     PLAYER,
-    WARRIOR;
+    WARRIOR,
+    GOBLIN,
+    IMP;
 
     private BufferedImage img;
 

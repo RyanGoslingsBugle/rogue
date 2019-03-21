@@ -4,8 +4,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class ScreenState {
 
@@ -65,7 +65,7 @@ public class ScreenState {
         return menuMessage;
     }
 
-    public void update(ArrayList<Row> boardRows, int score, int lives, int currentMenuSelection,
+    public void update(List<Row> boardRows, int score, int lives, int currentMenuSelection,
                        boolean isStarted, GameStatus gameState
             , String menuMessage) {
         board = joinBoardImage(boardRows);
@@ -79,7 +79,7 @@ public class ScreenState {
     }
 
     // http://kalanir.blogspot.com/2010/02/how-to-merge-multiple-images-into-one.html
-    private BufferedImage joinBoardImage(ArrayList<Row> boardRows) {
+    private BufferedImage joinBoardImage(List<Row> boardRows) {
         int cols = Constants.BOARD_WIDTH;
         int rows = Constants.BOARD_HEIGHT;
         int partWidth = Constants.TILE_WIDTH;
