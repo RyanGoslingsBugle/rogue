@@ -137,7 +137,7 @@ public class Game extends JFrame implements KeyListener, ActionListener {
     }
 
     private void showHelp() {
-        //TODO
+        gs.setScreenStatus(GameStatus.HELP);
     }
 
     private void changeDifficulty() {

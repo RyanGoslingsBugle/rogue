@@ -2,6 +2,13 @@ package com.rplant;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.font.FontRenderContext;
+import java.awt.font.LineBreakMeasurer;
+import java.awt.font.TextAttribute;
+import java.awt.font.TextLayout;
+import java.text.AttributedCharacterIterator;
+import java.text.AttributedString;
+import java.util.ArrayList;
 
 public class GUI extends JPanel {
 
@@ -108,6 +115,59 @@ public class GUI extends JPanel {
         }
     }
 
+    private void drawHelp(Graphics g) {
+
+        ArrayList<AttributedString> helpMsgs = new ArrayList<>();
+        helpMsgs.add(new AttributedString("Move onto enemies to destroy them and increase your score."));
+        helpMsgs.add(new AttributedString(" "));
+        helpMsgs.add(new AttributedString("Use the arrow keys or numpad to move."));
+        helpMsgs.add(new AttributedString(" "));
+        helpMsgs.add(new AttributedString("Art credits:"));
+        helpMsgs.add(new AttributedString(" "));
+        helpMsgs.add(new AttributedString("Artist: Stephen \"Redshrike\" Challener"));
+        helpMsgs.add(new AttributedString("Artist: The Pixelboy"));
+        helpMsgs.add(new AttributedString("Artist: Ahmed Avci"));
+        helpMsgs.add(new AttributedString("Contributor: William.Thompsonj"));
+        helpMsgs.add(new AttributedString(" "));
+        helpMsgs.add(new AttributedString("Music courtesy of Kevin MacLeod"));
+        helpMsgs.add(new AttributedString("incompetech.com"));
+        helpMsgs.add(new AttributedString(" "));
+        helpMsgs.add(new AttributedString("Sound effects created with Chiptone"));
+        helpMsgs.add(new AttributedString("sfbgames.com/chiptone"));
+
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setColor(Color.WHITE);
+        g2d.setFont(new Font("Courier New", Font.PLAIN, Constants.TEXT_SIZE));
+        drawParagraph(helpMsgs, g2d, 30);
+    }
+
+    private void drawParagraph(ArrayList<AttributedString> helpMsgs, Graphics2D g2d, float yPos) {
+        // https://docs.oracle.com/javase/tutorial/2d/text/drawmulstring.html
+        for (AttributedString str: helpMsgs) {
+            str.addAttribute(TextAttribute.FONT, g2d.getFont());
+            AttributedCharacterIterator paragraph = str.getIterator();
+            int paragraphStart = paragraph.getBeginIndex();
+            int paragraphEnd = paragraph.getEndIndex();
+            FontRenderContext frc = g2d.getFontRenderContext();
+            LineBreakMeasurer lineMeasurer = new LineBreakMeasurer(paragraph, frc);
+
+            float breakWidth = Constants.WINDOW_WIDTH - 60;
+            lineMeasurer.setPosition(paragraphStart);
+
+            while (lineMeasurer.getPosition() < paragraphEnd) {
+
+                TextLayout layout = lineMeasurer.nextLayout(breakWidth);
+
+                float drawPosX = layout.isLeftToRight()
+                        ? 30 : breakWidth - layout.getAdvance();
+
+                yPos += layout.getAscent();
+                layout.draw(g2d, drawPosX, yPos);
+                yPos += layout.getDescent() + layout.getLeading();
+            }
+        }
+    }
+
     private void drawGameOver(Graphics g) {
         g.setColor(Color.WHITE);
         g.setFont(new Font("Courier New", Font.BOLD, Constants.HEADER_TEXT_SIZE));
@@ -129,6 +189,7 @@ public class GUI extends JPanel {
                     drawMenu(g);
                     break;
                 case HELP:
+                    drawHelp(g);
                     break;
                 case GAME_OVER:
                     drawGameOver(g);
