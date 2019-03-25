@@ -1,8 +1,8 @@
 package com.rplant;
 
 public enum Difficulty {
-    EASY(7, 3, 3),
-    NORMAL(12, 2, 1);
+    EASY(40, 3, 3),
+    NORMAL(60, 2, 1);
 
     private final int numEnemies;
     private final int numToKill;

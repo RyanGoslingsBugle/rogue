@@ -1,7 +1,10 @@
 package com.rplant;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class GameState implements Serializable {
 
@@ -117,22 +120,26 @@ public class GameState implements Serializable {
 
     private void checkCollisions() {
         int collisionCount = 0;
-        for (Iterator<GameObject> enemyIterator = enemies.iterator(); enemyIterator.hasNext(); ) {
-            GameObject object = enemyIterator.next();
-            if (Arrays.equals(player.getPosition(), object.getPosition())) {
+        ArrayList<GameObject> collided = new ArrayList<>();
+
+        for (GameObject object : enemies) {
+            if (Arrays.equals(player.getPosition(), object.getPosition())) { // test if on the same tile
+                collided.add(object); // add to new list if collision has occurred
                 collisionCount++;
-                if (collisionCount < this.difficulty.getNumToKill()) {
-                    // https://stackoverflow.com/questions/8104692/how-to-avoid-java-util-concurrentmodificationexception-when-iterating-through-an
-                    killEnemy((Enemy)object, enemyIterator);
-                    score += ((Enemy) object).scoreVal;
-                } else {
-                    if (lives > 1) {
-                        SoundEffect.HURT.play();
-                        lives --;
-                    } else {
-                        gameOver();
-                    }
-                }
+            }
+        }
+
+        if (collisionCount < this.difficulty.getNumToKill()) {
+            for (GameObject object : collided) { // iterate collided list and remove
+                killEnemy((Enemy) object);
+                score += ((Enemy) object).scoreVal;
+            }
+        } else {
+            if (lives > 1) { // remove life
+                SoundEffect.HURT.play();
+                lives --;
+            } else { // if no lives left, end game
+                gameOver();
             }
         }
     }
@@ -208,9 +215,9 @@ public class GameState implements Serializable {
         enemies.add(newEnemy);
     }
 
-    private void killEnemy(Enemy enemy, Iterator<GameObject> iterator) {
+    private void killEnemy(Enemy enemy) {
         enemy.kill();
-        iterator.remove();
+        enemies.remove(enemy);
     }
 
 }
