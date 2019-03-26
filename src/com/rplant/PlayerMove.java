@@ -11,6 +11,10 @@ public class PlayerMove implements MoveBehaviour, Serializable {
         this.keyCode = keyCode;
     }
 
+    protected int getKeyCode() {
+        return keyCode;
+    }
+
     @Override
     public int[] getMove(int[] playerPosition, int[] currentPosition) {
         int x_position_change = 0;

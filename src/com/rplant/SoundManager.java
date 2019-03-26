@@ -11,6 +11,10 @@ public class SoundManager {
         currentBG = Music.MENU;
     }
 
+    protected Music getCurrentBG() {
+        return currentBG;
+    }
+
     public void update(GameStatus screenStatus) {
         if (screenStatus != this.screenStatus) {
             currentBG.stop();

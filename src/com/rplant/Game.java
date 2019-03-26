@@ -13,12 +13,29 @@ public class Game extends JFrame implements KeyListener, ActionListener {
 
     private final GUI gui = new GUI();
     private final SoundManager snd = new SoundManager();
-    private GameState gs = GameState.getState();
-    private final ScreenState state = new ScreenState();
+    protected GameState gs = GameState.getState();
+    protected final ScreenState state = new ScreenState();
     private int currentSelection = 0;
     private String menuMessage;
 
-    private Game() {
+    // for test suite
+    protected int getCurrentSelection() {
+        return currentSelection;
+    }
+
+    protected String getMenuMessage() {
+        return menuMessage;
+    }
+
+    protected void setCurrentSelection(int currentSelection) {
+        this.currentSelection = currentSelection;
+    }
+
+    protected void setMenuMessage(String menuMessage) {
+        this.menuMessage = menuMessage;
+    }
+
+    public Game() {
         setUpGame();
         setUI();
     }
@@ -146,7 +163,7 @@ public class Game extends JFrame implements KeyListener, ActionListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (gui.isFocusOwner()) {
+       // if (gui.isFocusOwner()) {
             this.menuMessage = "";
             int keyCode = e.getKeyCode();
             GameStatus state = gs.getScreenStatus();
@@ -178,7 +195,7 @@ public class Game extends JFrame implements KeyListener, ActionListener {
                     this.handleKeyPress(keyCode);
                 }
             }
-        }
+      // }
     }
 
     @Override
